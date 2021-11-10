@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Atividade Final Java Script -  Mariana Pereira
+-->
+    <meta charset="UTF-8">
+        <title>Atividade Final Java Script - Jogo Memória</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+  <div id="myDynamicTable"></div>
+
+  <h3>Acertos -  <span id="success">0</span></h3> 
+  <h3>Erros - <span id="error">0</span></h3>
+  <button id="myButton" onclick="numerosAleatorios();">EMBARALHAR</button>
+
+<script type="text/javascript">
+
+	var sorteio = [];
+	var firstImgChoose = 0;
+	var countSuccess = 0;
+	var countErrors = 0;
+
+	function numerosAleatorios(){
+		sorteio = [];
+		countSuccess = 0;
+		countErrors = 0; 
+
+		while(sorteio.length < 24){
+			var aleatorio = Math.floor(Math.random() * 24);
+			if(sorteio.indexOf(aleatorio) == -1){
+				sorteio.push(aleatorio);
+			}
+		}
+
+		createTable();
+	}
+	
+	numerosAleatorios();
+
+	function clickImg(imgId) {
+		document.getElementById(`img${imgId}`).src = `images/${imgId}.jpg`;
+
+		if(firstImgChoose === 0){
+			firstImgChoose = imgId;
+		}else{
+
+			var equal = false;
+
+			if(imgId % 2 === 0){
+				if(firstImgChoose + 1 === imgId)
+					equal = true;
+			}else{
+				if(firstImgChoose === imgId + 1)
+					equal = true;
+			}
+
+			if(equal){
+				alert("PARABÉNS VOCÊ ACERTOU!");
+				countSuccess += 1;
+				document.getElementById("success").innerHTML = countSuccess;
+			}else{
+				alert("INFELIZMENTE VOCÊ ERROU! Tente novamente.");
+				countErrors += 1;
+				document.getElementById("error").innerHTML = countErrors;
+				document.getElementById(`img${firstImgChoose}`).src = "images/frente.jpg";
+				document.getElementById(`img${imgId}`).src = "images/frente.jpg";
+			}
+			firstImgChoose = 0;
+			equal = false;
+		}
+	}
+
+	function createTable() {
+			var myTableDiv = document.getElementById("myDynamicTable");
+			myDynamicTable.innerHTML = '';
+
+			var table = document.createElement('TABLE');
+			table.border = '1';
+
+			var tableBody = document.createElement('TBODY');
+			table.appendChild(tableBody);
+
+			var count = 0;
+			for (var i = 0; i < 4; i++) {
+				var tr = document.createElement('TR');
+				tableBody.appendChild(tr);
+
+				for (var j = 0; j < 6; j++) {
+				var td = document.createElement('TD');
+				td.width = '75';
+				td.innerHTML = `<img id="img${sorteio[count] + 1}" onclick="clickImg(${sorteio[count] + 1});" src="images/frente.jpg" >`;
+				tr.appendChild(td);
+
+				count++;
+				}
+			}
+			myTableDiv.appendChild(table);
+
+	}
+
+</script>
+
+</body>
+</html>
